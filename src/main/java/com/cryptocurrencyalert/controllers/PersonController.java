@@ -1,26 +1,40 @@
 package com.cryptocurrencyalert.controllers;
 
+import com.cryptocurrencyalert.dto.PersonDTO;
 import com.cryptocurrencyalert.models.Person;
+import com.cryptocurrencyalert.repisitories.PeopleRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import javax.validation.Valid;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/reg")
+@RequestMapping("/people")
 public class PersonController {
-    @GetMapping()
+    private final PeopleRepository peopleRepository;
+    @Autowired
+    public PersonController(PeopleRepository peopleRepository) {
+        this.peopleRepository = peopleRepository;
+    }
+
+    @GetMapping("/reg")
     public String newPerson(@ModelAttribute("person") Person person) {
         return "new";
     }
 
-    @PostMapping()
+    @PostMapping("/reg")
     public String create(@ModelAttribute("person") Person person) {
-        System.out.println(person);
-        return "new";
+        peopleRepository.save(person);
+        return "redirect:/people/reg";
+    }
+    @ResponseBody
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> show(@PathVariable("id") int id) {
+        Person person = peopleRepository.findById(id).orElse(null);
+        if(person == null){
+            return new ResponseEntity<>("Not found", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(person,HttpStatus.OK);
     }
 }
