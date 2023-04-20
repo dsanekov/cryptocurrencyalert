@@ -35,7 +35,17 @@ public class DefaultController {
     }
     @GetMapping("/show")
     private String showAllPrices(){
-        cryptoCurrencyService.showAllPrices();
+        cryptoCurrencyService.checkAllPrices();
         return "ok";
     }
+    @GetMapping("/start")
+    private String startAlerting(){
+        cryptoCurrencyService.startAlerting();
+        return "ok";
+    }
+//    @GetMapping("/sent")
+//    private String sentMail(){
+//        cryptoCurrencyService.sentMail("Hello");
+//        return "mail sent";
+//    }
 }
