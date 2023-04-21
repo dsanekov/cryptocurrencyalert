@@ -1,16 +1,16 @@
 package com.cryptocurrencyalert.controllers;
 
-import com.cryptocurrencyalert.dto.PersonDTO;
 import com.cryptocurrencyalert.models.Person;
 import com.cryptocurrencyalert.repisitories.PeopleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/people")
+@RequestMapping("/api")
 public class PersonController {
     private final PeopleRepository peopleRepository;
     @Autowired
@@ -26,8 +26,16 @@ public class PersonController {
     @PostMapping("/reg")
     public String create(@ModelAttribute("person") Person person) {
         peopleRepository.save(person);
-        return "redirect:/people/reg";
+        return "redirect:/api/reg";
     }
+
+//    @GetMapping("/{id}/edit")
+//    public String edit(Model model, @PathVariable("id") int id) {
+//        Person person = peopleRepository.findById(id).orElse(null);
+//        model.addAttribute("person", person);
+//        return "edit";
+//    }
+
     @ResponseBody
     @GetMapping("/{id}")
     public ResponseEntity<Object> show(@PathVariable("id") int id) {
@@ -36,5 +44,15 @@ public class PersonController {
             return new ResponseEntity<>("Not found", HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(person,HttpStatus.OK);
+    }
+    @ResponseBody
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> delete(@PathVariable("id") int id) {
+        Person person = peopleRepository.findById(id).orElse(null);
+        if(person != null){
+            peopleRepository.delete(person);
+            return new ResponseEntity<>("Deleted", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Not found", HttpStatus.NOT_FOUND);
     }
 }

@@ -13,20 +13,22 @@ import org.springframework.web.client.RestTemplate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @Service
 public class CryptoCurrencyServiceImpl implements CryptoCurrencyService{
     private final PeopleRepository peopleRepository;
     private final JavaMailSender javaMailSender;
+    private final String uri = "https://api.binance.com/api/v3/ticker/price?symbol={symbol}";
     @Autowired
     public CryptoCurrencyServiceImpl(PeopleRepository peopleRepository, JavaMailSender javaMailSender) {
         this.peopleRepository = peopleRepository;
         this.javaMailSender = javaMailSender;
     }
 
-    @Override
-    public float checkPriceByPerson(Person person) {
-        String uri = "https://api.binance.com/api/v3/ticker/price?symbol={symbol}";
+    public boolean checkPriceByPerson(Person person) {
+        boolean deletePerson = false;
+
         RestTemplate restTemplate = new RestTemplate();
         Map<String, String> params = new HashMap<>();
         ObjectMapper mapper = new ObjectMapper();
@@ -41,23 +43,26 @@ public class CryptoCurrencyServiceImpl implements CryptoCurrencyService{
             if((person.getCondition().equals("Above") && price > person.getAlertPrice()) ||
                     (person.getCondition().equals("Below") && price < person.getAlertPrice())){
                 String text = person.getName() + " " + person.getTicker() + " is " + person.getCondition() + " then " + person.getAlertPrice() + " price now - " + price;
-                System.out.println(text);
                 sentMail(person.getEmail(),"Cryptocurrency Alert",text);
-                //TODO удалить это оповещение, если письмо отправлено.
-                //TODO Хранить в бекенде картинку и отправлять ее в сообщении.
+                System.out.println("Mail has been send - " + text);
+                deletePerson = true;
             }
         }
         catch (Exception e){
             e.printStackTrace();
         }
-        return price;
+        return deletePerson;
     }
-    @Override
+
     public void checkAllPrices(){
         List<Person> optionalList = peopleRepository.findAll();
+        CopyOnWriteArrayList<Person> deleteList = new CopyOnWriteArrayList();
         for(Person p : optionalList){
-            checkPriceByPerson(p);
+            if(checkPriceByPerson(p)){
+                deleteList.add(p);
+            }
         }
+        peopleRepository.deleteAll(deleteList);
     }
 
     @Override
@@ -75,7 +80,7 @@ public class CryptoCurrencyServiceImpl implements CryptoCurrencyService{
         });
         thread.start();
     }
-    @Override
+
     public void sentMail(String to, String subject, String text){
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setFrom("dsanekov@gmail.com");
@@ -84,7 +89,5 @@ public class CryptoCurrencyServiceImpl implements CryptoCurrencyService{
         mailMessage.setSubject(subject);
 
         javaMailSender.send(mailMessage);
-
-        System.out.println("mail sent");
     }
 }
