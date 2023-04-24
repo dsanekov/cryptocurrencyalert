@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>New Image</title>
+</head>
+<body>
+
+<form th:method="POST" th:action="@{/images/save}">
+    Image:<input type="file" name="file" /><br><br>
+    <input type="submit" value="Create!"/>
+</form>
+</body>
+</html>
