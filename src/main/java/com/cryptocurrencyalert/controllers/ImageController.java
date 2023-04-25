@@ -26,11 +26,16 @@ public class ImageController {
         this.imageService = imageService;
         this.imagesRepository = imagesRepository;
     }
-    @GetMapping("/save")
+    @PostMapping ("/save")
     public String saveImage(@RequestParam("file")MultipartFile file) throws Exception{
         imageService.saveImage(file);
-        return "newImage";
+        return "redirect:/images/save";
     }
+    @GetMapping("/save")
+    public String newImage(){
+        return "newImage2";
+    }
+
     @ResponseBody
     @GetMapping("/{id}")
     public ResponseEntity<?> show(@PathVariable("id") int id) {
@@ -43,5 +48,15 @@ public class ImageController {
                 .contentType(MediaType.valueOf(image.getContentType()))
                 .contentLength(image.getSize())
                 .body(new InputStreamResource(new ByteArrayInputStream(image.getBytes())));
+    }
+    @ResponseBody
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> delete(@PathVariable("id") int id) {
+        Image image = imagesRepository.findById(id).orElse(null);
+        if(image != null){
+            imagesRepository.delete(image);
+            return new ResponseEntity<>("Deleted", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Not found", HttpStatus.NOT_FOUND);
     }
 }

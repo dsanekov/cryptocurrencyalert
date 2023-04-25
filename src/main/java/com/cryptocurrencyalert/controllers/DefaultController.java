@@ -1,6 +1,7 @@
 package com.cryptocurrencyalert.controllers;
 
 import com.cryptocurrencyalert.services.CryptoCurrencyService;
+import com.cryptocurrencyalert.services.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,9 +10,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class DefaultController {
     private final CryptoCurrencyService cryptoCurrencyService;
+    private final ImageService imageService;
     @Autowired
-    public DefaultController(CryptoCurrencyService cryptoCurrencyService) {
+    public DefaultController(CryptoCurrencyService cryptoCurrencyService, ImageService imageService) {
         this.cryptoCurrencyService = cryptoCurrencyService;
+        this.imageService = imageService;
     }
 
     @GetMapping("/start")
