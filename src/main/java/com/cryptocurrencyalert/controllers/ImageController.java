@@ -1,7 +1,6 @@
 package com.cryptocurrencyalert.controllers;
 
 import com.cryptocurrencyalert.models.Image;
-import com.cryptocurrencyalert.models.Person;
 import com.cryptocurrencyalert.repisitories.ImagesRepository;
 import com.cryptocurrencyalert.services.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;

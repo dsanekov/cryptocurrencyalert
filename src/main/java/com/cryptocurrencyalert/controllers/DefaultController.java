@@ -22,4 +22,9 @@ public class DefaultController {
         cryptoCurrencyService.startAlerting();
         return "Alerting has been started";
     }
+    @GetMapping("/stop")
+    private String stopAlerting(){
+        cryptoCurrencyService.stopAlerting();
+        return "Alerting has been canceled";
+    }
 }

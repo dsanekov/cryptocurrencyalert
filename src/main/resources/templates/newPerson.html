@@ -16,16 +16,23 @@
     <div style="color:red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</div>
     <br/>
     <label for="ticker">Enter ticker: </label>
-    <input type="text" th:field="*{ticker}" id="ticker"/>
-    <div style="color:red" th:if="${#fields.hasErrors('ticker')}" th:errors="*{ticker}">ticker Error</div>
+    <select th:field="*{ticker}" id="ticker">
+        <option value="BTCUSDT">BTCUSDT</option>
+        <option value="ETHUSDT">ETHUSDT</option>
+        <option value="USDCUSDT">USDCUSDT</option>
+        <option value="XRPUSDT">XRPUSDT</option>
+        <option value="BUSDUSDT">BUSDUSDT</option>
+        <option value="SOLUSDT">SOLUSDT</option>
+        <option value="MATICUSDT">MATICUSDT</option>
+        <option value="DOGEUSDT">DOGEUSDT</option>
+        <option value="LTCUSDT">LTCUSDT</option>
+        <option value="ADAUSDT">ADAUSDT</option>
+    </select>
     <br/>
     <label for="alertPrice">Enter alertPrice: </label>
     <input type="text" th:field="*{alertPrice}" id="alertPrice"/>
     <div style="color:red" th:if="${#fields.hasErrors('alertPrice')}" th:errors="*{alertPrice}">alertPrice Error</div>
     <br/>
-<!--    <label for="condition">Enter condition: </label>-->
-<!--    <input type="text" th:field="*{condition}" id="condition"/>-->
-<!--    <div style="color:red" th:if="${#fields.hasErrors('condition')}" th:errors="*{condition}">alertPrice Error</div>-->
 
     <label for="condition">Enter condition: </label>
     <select th:field="*{condition}" id="condition">

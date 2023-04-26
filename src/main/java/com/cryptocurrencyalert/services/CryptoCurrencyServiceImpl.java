@@ -6,6 +6,7 @@ import com.cryptocurrencyalert.models.Person;
 import com.cryptocurrencyalert.repisitories.ImagesRepository;
 import com.cryptocurrencyalert.repisitories.PeopleRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.FileSystemResource;
@@ -31,11 +32,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
+@Slf4j
 public class CryptoCurrencyServiceImpl implements CryptoCurrencyService{
     private final PeopleRepository peopleRepository;
     private final ImagesRepository imagesRepository;
     private final JavaMailSender javaMailSender;
     private final String uri = "https://api.binance.com/api/v3/ticker/price?symbol={symbol}";
+    private volatile boolean stopAlerting = false;
     @Autowired
     public CryptoCurrencyServiceImpl(PeopleRepository peopleRepository, ImagesRepository imagesRepository, JavaMailSender javaMailSender) {
         this.peopleRepository = peopleRepository;
@@ -62,12 +65,12 @@ public class CryptoCurrencyServiceImpl implements CryptoCurrencyService{
                 String text = person.getName() + ", " + person.getTicker() + " is " + person.getCondition() + " then " + person.getAlertPrice() + "! Price now - " + price;
                 //sentMail(person.getEmail(),"Cryptocurrency Alert",text);
                 sentMailWithImage(person.getEmail(),"Cryptocurrency Alert",text);
-                System.out.println("Mail with image has been send - " + text);
                 deletePerson = true;
             }
         }
         catch (Exception e){
-            e.printStackTrace();
+            System.out.println(e.getMessage());
+            log.info(e.getMessage());
         }
         return deletePerson;
     }
@@ -86,17 +89,25 @@ public class CryptoCurrencyServiceImpl implements CryptoCurrencyService{
     @Override
     public void startAlerting() {
         Thread thread = new Thread(() -> {
-            while (true){
+            while (!stopAlerting){
                 try {
                     checkAllPrices();
                     Thread.sleep(60*1000);
                 }
                 catch (Exception exception){
-                    exception.printStackTrace();
+                    System.out.println(exception.getMessage());
+                    log.info(exception.getMessage());
                 }
             }
         });
         thread.start();
+        log.info("Alerting was started");
+    }
+
+    @Override
+    public void stopAlerting() {
+        stopAlerting = true;
+        log.info("Alerting was stopped");
     }
 
     public void sentMail(String to, String subject, String text){
@@ -107,10 +118,12 @@ public class CryptoCurrencyServiceImpl implements CryptoCurrencyService{
 
         try {
             javaMailSender.send(mailMessage);
+            log.info("Message has been sent to " + to);
         }
         catch (MailException ex) {
             // simply log it and go on...
             System.err.println(ex.getMessage());
+            log.info(ex.getMessage());
         }
     }
     public void sentMailWithImage(String to, String subject, String text){
@@ -133,10 +146,12 @@ public class CryptoCurrencyServiceImpl implements CryptoCurrencyService{
 
         try {
             javaMailSender.send(preparator);
+            log.info("Message has been sent to " + to);
         }
         catch (MailException ex) {
             // simply log it and go on...
             System.err.println(ex.getMessage());
+            log.info(ex.getMessage());
         }
     }
 
@@ -145,7 +160,6 @@ public class CryptoCurrencyServiceImpl implements CryptoCurrencyService{
         if(!imageList.isEmpty()){
             int randomElementIndex
                     = ThreadLocalRandom.current().nextInt(imageList.size());
-            System.out.println("random element index = " + randomElementIndex);
             return imageList.get(randomElementIndex);
         }
         return null;

@@ -3,7 +3,6 @@ package com.cryptocurrencyalert.models;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "Person")
@@ -13,18 +12,13 @@ public class Person {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @NotEmpty(message = "Имя не должно быть пустым")
-    @Size(min = 2, max = 100, message = "Имя должно быть от 2 до 100 символов длиной")
     @Column(name = "name")
     private String name;
 
-    @NotEmpty(message = "email не должен быть пустым")
     @Email
     @Column(name = "email")
     private String email;
 
-    @NotEmpty(message = "Тикер не должен быть пустым")
-    @Size(min = 2, max = 10, message = "Тикер должен быть от 2 до 10 символов длиной")
     @Column(name = "ticker")
     private String ticker;
 
