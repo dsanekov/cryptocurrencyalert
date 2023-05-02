@@ -15,7 +15,6 @@ The application performs the following functions:
 - Spring Data,
 - Hibernate,
 - PostgreSQL,
-- Docker,
 - REST API,
 - Slf4j,
 - HTML.
