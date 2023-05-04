@@ -3,6 +3,8 @@ package com.cryptocurrencyalert.controllers;
 import com.cryptocurrencyalert.models.Person;
 import com.cryptocurrencyalert.repisitories.PeopleRepository;
 import com.cryptocurrencyalert.services.PeopleService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/api")
+@Tag(name = "Alerts", description = "Operations with alerts")
 public class PersonController {
     private final PeopleRepository peopleRepository;
     private final PeopleService peopleService;
@@ -25,23 +28,27 @@ public class PersonController {
     }
 
     @GetMapping("/reg")
+    @Operation(summary = "Page for new alert")
     public String newPerson(@ModelAttribute("person") Person person) {
         return "newPerson";
     }
 
     @PostMapping("/reg")
+    @Operation(summary = "Save new alert")
     public String create(@ModelAttribute("person") Person person) {
         peopleRepository.save(person);
         return "redirect:/api/reg";
     }
 
     @GetMapping("/{id}/edit")
+    @Operation(summary = "Get alert for edit by id")
     public String edit(Model model, @PathVariable("id") int id) {
         Person person = peopleRepository.findById(id).orElse(null);
         model.addAttribute("person", person);
         return "edit";
     }
     @PatchMapping("/{id}/edit")
+    @Operation(summary = "Edit alert by id")
     public String update(@ModelAttribute("person") Person person,
                          @PathVariable("id") int id) {
 
@@ -51,6 +58,7 @@ public class PersonController {
 
     @ResponseBody
     @GetMapping("/{id}")
+    @Operation(summary = "Get alert by id")
     public ResponseEntity<Object> show(@PathVariable("id") int id) {
         Person person = peopleRepository.findById(id).orElse(null);
         if(person == null){
@@ -60,6 +68,7 @@ public class PersonController {
     }
     @ResponseBody
     @DeleteMapping("/{id}")
+    @Operation(summary = "Delete alert by id")
     public ResponseEntity<Object> delete(@PathVariable("id") int id) {
         Person person = peopleRepository.findById(id).orElse(null);
         if(person != null){
@@ -71,6 +80,7 @@ public class PersonController {
 
     @ResponseBody
     @GetMapping()
+    @Operation(summary = "Get all alerts")
     public ResponseEntity<Object> showAllPeople(){
         List<Person> people = peopleRepository.findAll();
         return new ResponseEntity<>(people, HttpStatus.OK);

@@ -3,6 +3,8 @@ package com.cryptocurrencyalert.controllers;
 import com.cryptocurrencyalert.models.Image;
 import com.cryptocurrencyalert.repisitories.ImagesRepository;
 import com.cryptocurrencyalert.services.ImageService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,7 @@ import java.io.ByteArrayInputStream;
 
 @Controller
 @RequestMapping("/images")
+@Tag(name = "Images", description = "Operations with images")
 public class ImageController {
     private final ImageService imageService;
     private final ImagesRepository imagesRepository;
@@ -26,17 +29,20 @@ public class ImageController {
         this.imagesRepository = imagesRepository;
     }
     @PostMapping ("/save")
+    @Operation(summary = "Save new image")
     public String saveImage(@RequestParam("file")MultipartFile file) throws Exception{
         imageService.saveImage(file);
         return "redirect:/images/save";
     }
     @GetMapping("/save")
+    @Operation(summary = "Page for new image")
     public String newImage(){
         return "newImage2";
     }
 
     @ResponseBody
     @GetMapping("/{id}")
+    @Operation(summary = "Get image by id")
     public ResponseEntity<?> show(@PathVariable("id") int id) {
         Image image = imagesRepository.findById(id).orElse(null);
         if(image == null){
@@ -50,6 +56,7 @@ public class ImageController {
     }
     @ResponseBody
     @DeleteMapping("/{id}")
+    @Operation(summary = "Delete image by id")
     public ResponseEntity<Object> delete(@PathVariable("id") int id) {
         Image image = imagesRepository.findById(id).orElse(null);
         if(image != null){
