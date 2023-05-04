@@ -16,6 +16,7 @@ The application performs the following functions:
 - Hibernate,
 - PostgreSQL,
 - REST API,
+- Swagger,
 - Slf4j,
 - HTML.
 
@@ -36,6 +37,8 @@ The application performs the following functions:
 - API DELETE "/api/{id}" removes alert by id.
 - API GET "/api/{id}/edit" returns form to update alert.
 - API POST "/api/{id}/edit" update alert.
+
+- Swagger start page "/swagger-ui/index.html".
 
 ## Set up before starting
 
