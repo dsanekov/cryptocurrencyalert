@@ -7,7 +7,7 @@
 <body>
 
 <form th:method="PATCH" th:action="@{/api/{id}/edit(id=${person.getId()})}" th:object="${person}">
-    <label for="name">Enter name: </label>
+    <label for="name">Enter comment: </label>
     <input type="text" th:field="*{name}" id="name"/>
     <div style="color:red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</div>
     <br/>
@@ -17,15 +17,10 @@
     <br/>
     <label for="ticker">Enter ticker: </label>
     <input type="text" th:field="*{ticker}" id="ticker"/>
-    <div style="color:red" th:if="${#fields.hasErrors('ticker')}" th:errors="*{ticker}">ticker Error</div>
     <br/>
     <label for="alertPrice">Enter alertPrice: </label>
     <input type="text" th:field="*{alertPrice}" id="alertPrice"/>
-    <div style="color:red" th:if="${#fields.hasErrors('alertPrice')}" th:errors="*{alertPrice}">alertPrice Error</div>
     <br/>
-<!--    <label for="condition">Enter condition: </label>-->
-<!--    <input type="text" th:field="*{condition}" id="condition"/>-->
-<!--    <div style="color:red" th:if="${#fields.hasErrors('condition')}" th:errors="*{condition}">alertPrice Error</div>-->
 
     <label for="condition">Enter condition: </label>
     <select th:field="*{condition}" id="condition">

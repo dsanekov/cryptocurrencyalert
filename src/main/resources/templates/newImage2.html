@@ -2,12 +2,12 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>New alert</title>
+    <title>New image</title>
 </head>
 <body>
 
 <form th:method="POST" th:action="@{/images/save}" enctype="multipart/form-data">
-    <input type="file" name="file" /><br><br>
+    <input type="file" name="file"/><br><br>
     <br/>
     <input type="Submit" value="Upload!"/>
 </form>

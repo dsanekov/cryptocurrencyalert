@@ -7,7 +7,7 @@
 <body>
 
 <form th:method="POST" th:action="@{/api/reg}" th:object="${person}">
-    <label for="name">Enter name: </label>
+    <label for="name">Enter comment: </label>
     <input type="text" th:field="*{name}" id="name"/>
     <div style="color:red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</div>
     <br/>
@@ -31,7 +31,6 @@
     <br/>
     <label for="alertPrice">Enter alertPrice: </label>
     <input type="text" th:field="*{alertPrice}" id="alertPrice"/>
-    <div style="color:red" th:if="${#fields.hasErrors('alertPrice')}" th:errors="*{alertPrice}">alertPrice Error</div>
     <br/>
 
     <label for="condition">Enter condition: </label>

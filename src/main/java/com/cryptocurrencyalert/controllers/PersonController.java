@@ -10,8 +10,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,9 +37,12 @@ public class PersonController {
 
     @PostMapping("/reg")
     @Operation(summary = "Save new alert")
-    public String create(@ModelAttribute("person") Person person) {
+    public String create(@ModelAttribute("person") @Valid Person person, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()){
+            return "newPerson";
+        }
         peopleRepository.save(person);
-        return "redirect:/api/reg";
+        return "redirect:/api";
     }
 
     @GetMapping("/{id}/edit")
@@ -49,8 +54,11 @@ public class PersonController {
     }
     @PatchMapping("/{id}/edit")
     @Operation(summary = "Edit alert by id")
-    public String update(@ModelAttribute("person") Person person,
+    public String update(@ModelAttribute("person") @Valid Person person, BindingResult bindingResult,
                          @PathVariable("id") int id) {
+        if(bindingResult.hasErrors()){
+            return "edit";
+        }
 
         peopleService.edit(id,person);
         return "redirect:/api/" + id;

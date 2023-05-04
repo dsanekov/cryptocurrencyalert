@@ -3,6 +3,7 @@ package com.cryptocurrencyalert.models;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "Person")
@@ -13,10 +14,12 @@ public class Person {
     private int id;
 
     @Column(name = "name")
+    @Size(min = 0, max = 100, message = "Should be between 0 and 100 characters")
     private String name;
 
-    @Email
+    @NotEmpty(message = "Should be not empty")
     @Column(name = "email")
+    @Email(message = "Not valid email")
     private String email;
 
     @Column(name = "ticker")
