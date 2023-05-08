@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  postgres:
+    image: 'postgres:12-alpine'
+    container_name: 'crypto-postgres-12-alpine'
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=cryptocurrencyalert
+      - POSTGRES_PASSWORD=root
+  app:
+    build: ./
+    container_name: 'cryptocurrencyalert'
+    depends_on:
+      - postgres
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/cryptocurrencyalert
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+
